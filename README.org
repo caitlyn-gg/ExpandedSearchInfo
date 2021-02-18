@@ -1,0 +1,52 @@
+#+title: Expanded Search Info
+#+options: toc:nil
+
+This plugin displays extracted information from several different
+websites when examining a character's search info.
+
+* Table of contents :TOC:
+- [[#usage][Usage]]
+- [[#supported-providers][Supported providers]]
+  - [[#plain-text-urls][Plain text URLs]]
+  - [[#pastebincom][pastebin.com]]
+  - [[#carrdco][carrd.co]]
+  - [[#f-list][F-List]]
+  - [[#refsheet][Refsheet]]
+
+* Usage
+
+Install the plugin via ~/xlplugins~, then examine a character. If they
+have a supported provider listed below contained in their search info,
+Expanded Search Info will download and extract information, then
+display it in a window next to the Examine window.
+
+* Supported providers
+
+** Plain text URLs
+
+Expanded Search Info can pull data from any plain text URL. If the URL
+leads to a page that has a ~Content-Type~ of ~text/plain~, the plugin
+will display its content.
+
+** pastebin.com
+
+Either direct URLs to pastebin.com (~pastebin.com/xxx~ or
+~pastebin.com/raw/xxx~) or a special identifier (~pb:xxx~) can be used
+for pastebin.com.
+
+** carrd.co
+
+All ~carrd.co~ and ~crd.co~ URLs will be extracted.
+
+** F-List
+
+If the character's search info contains ~c/~, then the plugin will
+attempt to pull an F-List page corresponding to the character's name
+with apostrophes removed (e.g. ~Y'shtola~ turns into ~Yshtola~).
+
+Alternatively, an F-List URL can be provided in search info
+(~f-list.net/c/xxx~).
+
+** Refsheet
+
+All ~refsheet.net~ and ~ref.st~ URLs will be extracted.

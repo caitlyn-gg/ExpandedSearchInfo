@@ -12,3 +12,4 @@ description: |-
 
   Simply examine someone with a search info containing pointers to one of
   these locations and the plugin will display information automatically.
+repo_url: https://git.sr.ht/~jkcclemens/ExpandedSearchInfo
