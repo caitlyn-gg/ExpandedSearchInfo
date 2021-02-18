@@ -12,7 +12,7 @@
                 Internalize="true"
                 InputAssemblies="@(InputAssemblies)"
                 TargetKind="Dll"
-                LibraryPath="$(OutputPath);$(AppData)\XIVLauncher\addon\Hooks"
+                LibraryPath="$(OutputPath);$(AppData)\XIVLauncher\addon\Hooks\dev"
                 OutputFile="$(OutputPath)\$(AssemblyName).dll"
         />
 
