@@ -1,0 +1,14 @@
+﻿author: ascclemens
+name: Expanded Search Info
+description: |-
+  Displays extra information pulled from search info when examining.
+
+  Support for:
+  - Any plain text URL
+  - Pastebin.com
+  - carrd.co/crd.co
+  - F-List
+  - Refsheet
+
+  Simply examine someone with a search info containing pointers to one of
+  these locations and the plugin will display information automatically.
