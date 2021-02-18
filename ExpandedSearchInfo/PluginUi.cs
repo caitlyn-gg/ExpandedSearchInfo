@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
+using Dalamud.Interface;
 using ImGuiNET;
 
 namespace ExpandedSearchInfo {
@@ -15,6 +16,21 @@ namespace ExpandedSearchInfo {
 
         public void Dispose() {
             this.Plugin.Interface.UiBuilder.OnBuildUi -= this.Draw;
+        }
+
+        private static bool IconButton(FontAwesomeIcon icon, string? id = null) {
+            ImGui.PushFont(UiBuilder.IconFont);
+
+            var text = icon.ToIconString();
+            if (id != null) {
+                text += $"##{id}";
+            }
+
+            var result = ImGui.Button(text);
+
+            ImGui.PopFont();
+
+            return result;
         }
 
         private void Draw() {
@@ -68,8 +84,26 @@ namespace ExpandedSearchInfo {
 
                 ImGui.TreePush();
 
-                if (ImGui.Button($"Open in browser##{i}")) {
+                if (IconButton(FontAwesomeIcon.ExternalLinkAlt, $"open-{i}")) {
                     Process.Start(section.Uri.ToString());
+                }
+
+                if (ImGui.IsItemHovered()) {
+                    ImGui.BeginTooltip();
+                    ImGui.TextUnformatted("Open in browser.");
+                    ImGui.EndTooltip();
+                }
+
+                ImGui.SameLine();
+
+                if (IconButton(FontAwesomeIcon.Redo, $"refresh-{i}")) {
+                    this.Plugin.Repository.SearchInfos.TryRemove(actorId, out _);
+                }
+
+                if (ImGui.IsItemHovered()) {
+                    ImGui.BeginTooltip();
+                    ImGui.TextUnformatted("Clear the cache. Re-examine this character to redownload information.");
+                    ImGui.EndTooltip();
                 }
 
                 section.Draw();
