@@ -29,6 +29,7 @@ namespace ExpandedSearchInfo {
         internal int LastActorId { get; private set; }
 
         private List<IProvider> Providers { get; } = new();
+        internal IEnumerable<IProvider> AllProviders => this.Providers;
 
         internal SearchInfoRepository(Plugin plugin) {
             this.Plugin = plugin;
@@ -53,11 +54,11 @@ namespace ExpandedSearchInfo {
         }
 
         private void AddProviders() {
-            this.Providers.Add(new PastebinProvider());
-            this.Providers.Add(new CarrdProvider());
+            this.Providers.Add(new PastebinProvider(this.Plugin));
+            this.Providers.Add(new CarrdProvider(this.Plugin));
             this.Providers.Add(new FListProvider(this.Plugin));
-            this.Providers.Add(new RefsheetProvider());
-            this.Providers.Add(new PlainTextProvider());
+            this.Providers.Add(new RefsheetProvider(this.Plugin));
+            this.Providers.Add(new PlainTextProvider(this.Plugin));
         }
 
         private void ProcessSearchInfo(int actorId, string info) {
@@ -93,7 +94,7 @@ namespace ExpandedSearchInfo {
 
             // extract uris from the search info with providers
             var extractedUris = this.Providers
-                .Where(provider => provider.ExtractsUris)
+                .Where(provider => provider.Config.Enabled && provider.ExtractsUris)
                 .Select(provider => provider.ExtractUris(actorId, info))
                 .Where(uris => uris != null)
                 .SelectMany(uris => uris);
@@ -151,7 +152,7 @@ namespace ExpandedSearchInfo {
 
                 // find the providers that run on this uri
                 var matching = this.Providers
-                    .Where(provider => provider.Matches(uri))
+                    .Where(provider => provider.Config.Enabled && provider.Matches(uri))
                     .ToList();
 
                 // skip the uri if no providers

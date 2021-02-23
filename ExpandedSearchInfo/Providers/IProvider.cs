@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 
 namespace ExpandedSearchInfo.Providers {
     public interface IProvider {
+        string Name { get; }
+
+        string Description { get; }
+
+        BaseConfig Config { get; }
+
         /// <summary>
         ///     If this provider is capable of parsing the search info for custom Uris, this should be true.
         ///
@@ -13,6 +20,8 @@ namespace ExpandedSearchInfo.Providers {
         ///     that only handle normal Uris.
         /// </summary>
         bool ExtractsUris { get; }
+
+        void DrawConfig();
 
         /// <summary>
         ///     Determine if this provider should run on the given Uri.

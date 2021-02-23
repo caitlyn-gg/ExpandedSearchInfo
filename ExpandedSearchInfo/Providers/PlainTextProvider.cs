@@ -2,11 +2,27 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 
 namespace ExpandedSearchInfo.Providers {
     public class PlainTextProvider : IProvider {
+        private Plugin Plugin { get; }
+
+        public string Name => "Plain text";
+
+        public string Description => "This provider provides information for any URL that provides plain text.";
+
+        public BaseConfig Config => this.Plugin.Config.Configs.PlainText;
+
         public bool ExtractsUris => false;
+
+        internal PlainTextProvider(Plugin plugin) {
+            this.Plugin = plugin;
+        }
+
+        public void DrawConfig() {
+        }
 
         public bool Matches(Uri uri) => true;
 
@@ -20,7 +36,7 @@ namespace ExpandedSearchInfo.Providers {
             var info = await response.Content.ReadAsStringAsync();
 
             var uri = response.RequestMessage.RequestUri;
-            return new TextSection($"Text##{uri}", response.RequestMessage.RequestUri, info);
+            return new TextSection(this, $"Text##{uri}", response.RequestMessage.RequestUri, info);
         }
     }
 }

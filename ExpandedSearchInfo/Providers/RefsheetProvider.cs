@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -11,7 +12,22 @@ namespace ExpandedSearchInfo.Providers {
     public class RefsheetProvider : BaseHtmlProvider {
         private const string JsonLineStart = "var props = ";
 
+        private Plugin Plugin { get; }
+
+        public override string Name => "Refsheet";
+
+        public override string Description => "This provider provides information for refsheet.net and ref.st URLs.";
+
+        public override BaseConfig Config => this.Plugin.Config.Configs.Refsheet;
+
         public override bool ExtractsUris => false;
+
+        internal RefsheetProvider(Plugin plugin) {
+            this.Plugin = plugin;
+        }
+
+        public override void DrawConfig() {
+        }
 
         public override bool Matches(Uri uri) => uri.Host == "refsheet.net" || uri.Host == "ref.st";
 
@@ -95,6 +111,7 @@ namespace ExpandedSearchInfo.Providers {
             }
 
             return new RefsheetSection(
+                this,
                 $"{name} (Refsheet)",
                 response.RequestMessage.RequestUri,
                 attributes,

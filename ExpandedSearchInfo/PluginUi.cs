@@ -8,13 +8,26 @@ namespace ExpandedSearchInfo {
     public class PluginUi : IDisposable {
         private Plugin Plugin { get; }
 
+        private bool _configVisible;
+
+        internal bool ConfigVisible {
+            get => this._configVisible;
+            set => this._configVisible = value;
+        }
+
         internal PluginUi(Plugin plugin) {
             this.Plugin = plugin;
 
             this.Plugin.Interface.UiBuilder.OnBuildUi += this.Draw;
+            this.Plugin.Interface.UiBuilder.OnOpenConfigUi += this.OnOpenConfigUi;
+        }
+
+        private void OnOpenConfigUi(object sender, EventArgs e) {
+            this.ConfigVisible = true;
         }
 
         public void Dispose() {
+            this.Plugin.Interface.UiBuilder.OnOpenConfigUi -= this.OnOpenConfigUi;
             this.Plugin.Interface.UiBuilder.OnBuildUi -= this.Draw;
         }
 
@@ -34,6 +47,88 @@ namespace ExpandedSearchInfo {
         }
 
         private void Draw() {
+            this.DrawConfig();
+            this.DrawExpandedSearchInfo();
+        }
+
+        private void DrawConfig() {
+            if (!this.ConfigVisible) {
+                return;
+            }
+
+            ImGui.SetNextWindowSize(new Vector2(500, -1), ImGuiCond.FirstUseEver);
+
+            if (!ImGui.Begin($"{this.Plugin.Name} settings", ref this._configVisible)) {
+                return;
+            }
+
+            ImGui.PushTextWrapPos();
+
+            if (ImGui.Button("Clear cache")) {
+                this.Plugin.Repository.SearchInfos.Clear();
+            }
+
+            ImGui.SameLine();
+
+            var cached = this.Plugin.Repository.SearchInfos.Count;
+            var playersString = cached switch {
+                1 => "One player",
+                _ => $"{cached} players",
+            };
+            ImGui.TextUnformatted($"{playersString} in the cache");
+
+            ImGui.Spacing();
+
+            ImGui.TextUnformatted("Expanded Search Info downloads information contained in search infos once and caches it for later retrieval. If you want to clear this cache, click the button above. You can also clear individual players from the cache with the button in their expanded info.");
+
+            ImGui.Separator();
+
+            if (ImGui.CollapsingHeader("Providers", ImGuiTreeNodeFlags.DefaultOpen)) {
+                if (!ImGui.BeginTabBar("ESI tabs")) {
+                    return;
+                }
+
+                foreach (var provider in this.Plugin.Repository.AllProviders) {
+                    if (!ImGui.BeginTabItem($"{provider.Name}##esi-provider")) {
+                        continue;
+                    }
+
+                    ImGui.Columns(2);
+
+                    ImGui.SetColumnWidth(0, ImGui.GetWindowWidth() / 3);
+
+                    ImGui.TextUnformatted(provider.Description);
+
+                    ImGui.NextColumn();
+
+                    var enabled = provider.Config.Enabled;
+                    if (ImGui.Checkbox($"Enabled##{provider.Name}", ref enabled)) {
+                        provider.Config.Enabled = enabled;
+                        this.Plugin.Config.Save();
+                    }
+
+                    var defaultOpen = provider.Config.DefaultExpanded;
+                    if (ImGui.Checkbox($"Open by default##{provider.Name}", ref defaultOpen)) {
+                        provider.Config.DefaultExpanded = defaultOpen;
+                        this.Plugin.Config.Save();
+                    }
+
+                    provider.DrawConfig();
+
+                    ImGui.Columns(1);
+
+                    ImGui.EndTabItem();
+                }
+
+                ImGui.EndTabBar();
+            }
+
+            ImGui.PopTextWrapPos();
+
+            ImGui.End();
+        }
+
+        private void DrawExpandedSearchInfo() {
             // check if the examine window is open
             var addon = this.Plugin.Interface.Framework.Gui.GetAddonByName("CharacterInspect", 1);
             if (addon == null || !addon.Visible) {
@@ -78,7 +173,11 @@ namespace ExpandedSearchInfo {
             for (var i = 0; i < expanded.Sections.Count; i++) {
                 var section = expanded.Sections[i];
 
-                if (!ImGui.CollapsingHeader($"{section.Name}##{i}", ImGuiTreeNodeFlags.DefaultOpen)) {
+                var flags = section.Provider.Config.DefaultExpanded switch {
+                    true => ImGuiTreeNodeFlags.DefaultOpen,
+                    false => ImGuiTreeNodeFlags.None,
+                };
+                if (!ImGui.CollapsingHeader($"{section.Name}##{i}", flags)) {
                     continue;
                 }
 

@@ -27,10 +27,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AngleSharp" Version="0.14.0"/>
-        <PackageReference Include="DalamudPackager" Version="1.2.0"/>
-        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2"/>
-        <PackageReference Include="Nager.PublicSuffix" Version="2.1.0"/>
+        <PackageReference Include="AngleSharp" Version="0.14.0" />
+        <PackageReference Include="DalamudPackager" Version="1.2.0" />
+        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+        <PackageReference Include="Nager.PublicSuffix" Version="2.2.2" />
     </ItemGroup>
 
 </Project>

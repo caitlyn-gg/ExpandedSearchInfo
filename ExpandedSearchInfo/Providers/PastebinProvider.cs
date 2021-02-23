@@ -4,13 +4,29 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 
 namespace ExpandedSearchInfo.Providers {
     public class PastebinProvider : IProvider {
         private static readonly Regex Matcher = new(@"pb:(\S+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        private Plugin Plugin { get; }
+
+        public string Name => "pastebin.com";
+
+        public string Description => "This provider provides information from pastebin.com URLs. It also works on tags such as \"pb:pasteid\".";
+
+        public BaseConfig Config => this.Plugin.Config.Configs.Pastebin;
+
         public bool ExtractsUris => true;
+
+        public PastebinProvider(Plugin plugin) {
+            this.Plugin = plugin;
+        }
+
+        public void DrawConfig() {
+        }
 
         public bool Matches(Uri uri) => uri.Host == "pastebin.com" && uri.AbsolutePath.Length > 1;
 
@@ -30,7 +46,7 @@ namespace ExpandedSearchInfo.Providers {
 
             var info = await response.Content.ReadAsStringAsync();
 
-            return new TextSection($"Pastebin ({id})", response.RequestMessage.RequestUri, info);
+            return new TextSection(this, $"Pastebin ({id})", response.RequestMessage.RequestUri, info);
         }
     }
 }

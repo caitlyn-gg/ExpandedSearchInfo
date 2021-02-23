@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ExpandedSearchInfo.Providers;
 using ImGuiNET;
 
 namespace ExpandedSearchInfo.Sections {
     public class FListSection : ISearchInfoSection {
+        public IProvider Provider { get; }
         public string Name { get; }
         public Uri Uri { get; }
 
@@ -15,7 +17,8 @@ namespace ExpandedSearchInfo.Sections {
         private List<Tuple<string, string>> Maybe { get; }
         private List<Tuple<string, string>> No { get; }
 
-        internal FListSection(string name, Uri uri, string info, List<Tuple<string, string>> stats, List<Tuple<string, string>> fave, List<Tuple<string, string>> yes, List<Tuple<string, string>> maybe, List<Tuple<string, string>> no) {
+        internal FListSection(IProvider provider, string name, Uri uri, string info, List<Tuple<string, string>> stats, List<Tuple<string, string>> fave, List<Tuple<string, string>> yes, List<Tuple<string, string>> maybe, List<Tuple<string, string>> no) {
+            this.Provider = provider;
             this.Name = name;
             this.Uri = uri;
 

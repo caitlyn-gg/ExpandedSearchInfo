@@ -3,11 +3,27 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
+using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 
 namespace ExpandedSearchInfo.Providers {
     public class CarrdProvider : BaseHtmlProvider {
+        private Plugin Plugin { get; }
+
+        public override string Name => "carrd.co/crd.co";
+
+        public override string Description => "This provider provides information for carrd.co and crd.co URLs.";
+
+        public override BaseConfig Config => this.Plugin.Config.Configs.Carrd;
+
         public override bool ExtractsUris => false;
+
+        internal CarrdProvider(Plugin plugin) {
+            this.Plugin = plugin;
+        }
+
+        public override void DrawConfig() {
+        }
 
         public override bool Matches(Uri uri) => uri.Host.EndsWith(".carrd.co") || uri.Host.EndsWith(".crd.co");
 
@@ -58,6 +74,7 @@ namespace ExpandedSearchInfo.Providers {
             }
 
             return new TextSection(
+                this,
                 $"{document.Title} (carrd.co)",
                 response.RequestMessage.RequestUri,
                 text

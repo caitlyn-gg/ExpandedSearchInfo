@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ExpandedSearchInfo.Providers;
 using ImGuiNET;
 
 namespace ExpandedSearchInfo.Sections {
     public class RefsheetSection : ISearchInfoSection {
+        public IProvider Provider { get; }
         public string Name { get; }
         public Uri Uri { get; }
 
@@ -11,7 +13,8 @@ namespace ExpandedSearchInfo.Sections {
         private string Notes { get; }
         private List<Tuple<string, string>> Cards { get; }
 
-        internal RefsheetSection(string name, Uri uri, List<Tuple<string, string>> attributes, string notes, List<Tuple<string, string>> cards) {
+        internal RefsheetSection(IProvider provider, string name, Uri uri, List<Tuple<string, string>> attributes, string notes, List<Tuple<string, string>> cards) {
+            this.Provider = provider;
             this.Name = name;
             this.Uri = uri;
             this.Attributes = attributes;

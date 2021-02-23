@@ -1,13 +1,16 @@
 ﻿using System;
-using ImGuiNET;
+using ExpandedSearchInfo.Providers;
 
 namespace ExpandedSearchInfo.Sections {
     public class TextSection : ISearchInfoSection {
-        private string Info { get; }
+        public IProvider Provider { get; }
         public string Name { get; }
         public Uri Uri { get; }
 
-        internal TextSection(string name, Uri uri, string info) {
+        private string Info { get; }
+
+        internal TextSection(IProvider provider, string name, Uri uri, string info) {
+            this.Provider = provider;
             this.Name = name;
             this.Uri = uri;
             this.Info = info;

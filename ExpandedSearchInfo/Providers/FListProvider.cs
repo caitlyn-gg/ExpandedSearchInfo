@@ -4,20 +4,27 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AngleSharp;
 using AngleSharp.Dom;
-using Dalamud.Plugin;
+using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 
 namespace ExpandedSearchInfo.Providers {
     public class FListProvider : BaseHtmlProvider {
-
         private Plugin Plugin { get; }
+
+        public override string Name => "F-List";
+
+        public override string Description => "This provider provides information for F-List URLs. It also searches for F-List profiles matching the character's name if /c/ is in their search info.";
+
+        public override BaseConfig Config => this.Plugin.Config.Configs.FList;
 
         public override bool ExtractsUris => true;
 
         internal FListProvider(Plugin plugin) {
             this.Plugin = plugin;
+        }
+
+        public override void DrawConfig() {
         }
 
         public override bool Matches(Uri uri) => (uri.Host == "www.f-list.net" || uri.Host == "f-list.net") && uri.AbsolutePath.StartsWith("/c/");
@@ -44,7 +51,13 @@ namespace ExpandedSearchInfo.Providers {
 
             var error = document.QuerySelector("#DisplayedMessage");
             if (error != null) {
-                if (error.Text().Contains("No such character exists")) {
+                var errorText = error.Text();
+
+                if (errorText.Contains("No such character exists")) {
+                    return null;
+                }
+
+                if (errorText.Contains("has been banned")) {
                     return null;
                 }
             }
@@ -84,6 +97,7 @@ namespace ExpandedSearchInfo.Providers {
 
             var charName = document.Title.Split('-')[2].Trim();
             return new FListSection(
+                this,
                 $"{charName} (F-List)",
                 response.RequestMessage.RequestUri,
                 info,
