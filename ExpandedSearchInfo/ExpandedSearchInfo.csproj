@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="Dalamud, Version=5.2.3.3, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="Dalamud, Version=5.2.4.2, Culture=neutral, PublicKeyToken=null">
             <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
             <Private>False</Private>
         </Reference>
@@ -27,10 +27,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AngleSharp" Version="0.14.0" />
-        <PackageReference Include="DalamudPackager" Version="1.2.0" />
-        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
-        <PackageReference Include="Nager.PublicSuffix" Version="2.2.2" />
+        <PackageReference Include="AngleSharp" Version="0.14.0"/>
+        <PackageReference Include="DalamudPackager" Version="1.2.1"/>
+        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2"/>
+        <PackageReference Include="Nager.PublicSuffix" Version="2.2.2"/>
     </ItemGroup>
 
 </Project>
