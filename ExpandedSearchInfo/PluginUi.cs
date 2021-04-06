@@ -219,7 +219,7 @@ namespace ExpandedSearchInfo {
             var xPos = x + width + actualWidth > display.X
                 ? x - actualWidth
                 : x + width;
-            ImGui.SetWindowPos(new Vector2(xPos, y));
+            ImGui.SetWindowPos(ImGuiHelpers.MainViewport.Pos + new Vector2(xPos, y));
 
             ImGui.End();
         }
