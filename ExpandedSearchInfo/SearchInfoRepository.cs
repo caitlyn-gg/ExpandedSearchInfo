@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Plugin;
 using ExpandedSearchInfo.Providers;
 using ExpandedSearchInfo.Sections;
@@ -61,8 +62,10 @@ namespace ExpandedSearchInfo {
             this.Providers.Add(new PlainTextProvider(this.Plugin));
         }
 
-        private void ProcessSearchInfo(int actorId, string info) {
+        private void ProcessSearchInfo(int actorId, SeString raw) {
             this.LastActorId = actorId;
+
+            var info = raw.TextValue;
 
             // if empty search info, short circuit
             if (string.IsNullOrWhiteSpace(info)) {

@@ -88,7 +88,7 @@ namespace ExpandedSearchInfo.Providers {
             }
 
             // remove bbcode and turn special characters into normal ascii
-            info = Util.StripBbCode(info).Normalize(NormalizationForm.FormKD);
+            info = info.StripBbCode().Normalize(NormalizationForm.FormKD);
 
             var fave = KinkSection(document, "Character_FetishlistFave");
             var yes = KinkSection(document, "Character_FetishlistYes");

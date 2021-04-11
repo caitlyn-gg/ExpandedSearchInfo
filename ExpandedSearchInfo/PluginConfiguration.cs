@@ -1,7 +1,9 @@
-﻿using Dalamud.Configuration;
+﻿using System;
+using Dalamud.Configuration;
 using ExpandedSearchInfo.Configs;
 
 namespace ExpandedSearchInfo {
+    [Serializable]
     public class PluginConfiguration : IPluginConfiguration {
         private Plugin Plugin { get; set; } = null!;
 
@@ -18,6 +20,7 @@ namespace ExpandedSearchInfo {
         }
     }
 
+    [Serializable]
     public class ProviderConfigs {
         public CarrdConfig Carrd { get; set; } = new();
         public FListConfig FList { get; set; } = new();

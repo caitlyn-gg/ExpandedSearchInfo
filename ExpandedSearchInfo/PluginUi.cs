@@ -131,7 +131,7 @@ namespace ExpandedSearchInfo {
         private void DrawExpandedSearchInfo() {
             // check if the examine window is open
             var addon = this.Plugin.Interface.Framework.Gui.GetAddonByName("CharacterInspect", 1);
-            if (addon == null || !addon.Visible) {
+            if (addon is not {Visible: true}) {
                 return;
             }
 

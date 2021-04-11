@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Plugin;
 
@@ -11,7 +12,7 @@ namespace ExpandedSearchInfo {
 
         private readonly Hook<SearchInfoDownloadedDelegate>? _searchInfoDownloadedHook;
 
-        internal delegate void ReceiveSearchInfoEventDelegate(int actorId, string info);
+        internal delegate void ReceiveSearchInfoEventDelegate(int actorId, SeString info);
 
         internal event ReceiveSearchInfoEventDelegate? ReceiveSearchInfo;
 
@@ -34,7 +35,7 @@ namespace ExpandedSearchInfo {
                 var actorId = Marshal.ReadInt32(data + 48);
 
                 // var searchInfoPtr = data + 90;
-                var searchInfo = Util.ReadRawString(searchInfoPtr);
+                var searchInfo = this.Plugin.Interface.SeStringManager.ReadRawSeString(searchInfoPtr);
 
                 this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
             } catch (Exception ex) {
