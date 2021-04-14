@@ -32,9 +32,9 @@ namespace ExpandedSearchInfo {
             var result = this._searchInfoDownloadedHook!.Original(data, a2, searchInfoPtr, a4);
 
             try {
+                // Updated: 4.5
                 var actorId = Marshal.ReadInt32(data + 48);
 
-                // var searchInfoPtr = data + 90;
                 var searchInfo = this.Plugin.Interface.SeStringManager.ReadRawSeString(searchInfoPtr);
 
                 this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
