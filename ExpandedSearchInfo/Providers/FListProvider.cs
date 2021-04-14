@@ -12,7 +12,7 @@ namespace ExpandedSearchInfo.Providers {
     public class FListProvider : BaseHtmlProvider {
         private Plugin Plugin { get; }
 
-        public override string Name => "F-List";
+        public override string Name => "F-List (18+)";
 
         public override string Description => "This provider provides information for F-List URLs. It also searches for F-List profiles matching the character's name if /c/ is in their search info.";
 
