@@ -28,10 +28,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AngleSharp" Version="0.14.0" />
-        <PackageReference Include="DalamudPackager" Version="1.2.1" />
-        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
-        <PackageReference Include="Nager.PublicSuffix" Version="2.2.2" />
+        <PackageReference Include="AngleSharp" Version="1.0.0-alpha-844"/>
+        <PackageReference Include="DalamudPackager" Version="1.2.1"/>
+        <PackageReference Include="Fody" Version="6.5.2" PrivateAssets="all"/>
+        <PackageReference Include="ILMerge.Fody" Version="1.16.0" PrivateAssets="all"/>
+        <PackageReference Include="Nager.PublicSuffix" Version="2.2.2"/>
     </ItemGroup>
 
 </Project>
