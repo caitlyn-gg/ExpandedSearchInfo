@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
@@ -8,11 +9,17 @@ using ExpandedSearchInfo.Sections;
 
 namespace ExpandedSearchInfo.Providers {
     public class CarrdProvider : BaseHtmlProvider {
+        private static readonly string[] Domains = {
+            ".carrd.co",
+            ".crd.co",
+            ".carrd.com",
+        };
+
         private Plugin Plugin { get; }
 
-        public override string Name => "carrd.co/crd.co";
+        public override string Name => "Carrd";
 
-        public override string Description => "This provider provides information for carrd.co and crd.co URLs.";
+        public override string Description => "This provider provides information for carrd.co URLs and their aliases.";
 
         public override BaseConfig Config => this.Plugin.Config.Configs.Carrd;
 
@@ -25,7 +32,7 @@ namespace ExpandedSearchInfo.Providers {
         public override void DrawConfig() {
         }
 
-        public override bool Matches(Uri uri) => uri.Host.EndsWith(".carrd.co") || uri.Host.EndsWith(".crd.co");
+        public override bool Matches(Uri uri) => Domains.Any(domain => uri.Host.EndsWith(domain));
 
         public override IEnumerable<Uri>? ExtractUris(int actorId, string info) => null;
 
@@ -64,7 +71,7 @@ namespace ExpandedSearchInfo.Providers {
                 foreach (var node in element.ChildNodes) {
                     text += node.Text();
                     // add an extra newline if the node is a br
-                    if (node is IElement {TagName: "BR"}) {
+                    if (node is IElement { TagName: "BR" }) {
                         text += '\n';
                     }
                 }
@@ -75,7 +82,7 @@ namespace ExpandedSearchInfo.Providers {
 
             return new TextSection(
                 this,
-                $"{document.Title} (carrd.co)",
+                $"{document.Title} (Carrd)",
                 response.RequestMessage.RequestUri,
                 text
             );
