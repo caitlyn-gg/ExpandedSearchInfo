@@ -29,9 +29,9 @@ namespace ExpandedSearchInfo.Providers {
         public override void DrawConfig() {
         }
 
-        public override bool Matches(Uri uri) => uri.Host == "refsheet.net" || uri.Host == "ref.st";
+        public override bool Matches(Uri uri) => uri.Host is "refsheet.net" or "ref.st";
 
-        public override IEnumerable<Uri>? ExtractUris(int actorId, string info) => null;
+        public override IEnumerable<Uri>? ExtractUris(uint objectId, string info) => null;
 
         public override async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
             var document = await this.DownloadDocument(response);
@@ -52,6 +52,10 @@ namespace ExpandedSearchInfo.Providers {
 
             var json = jsonLine.Substring(JsonLineStart.Length, jsonLine.Length - JsonLineStart.Length - 1);
             var parsed = JsonConvert.DeserializeObject<RefsheetData>(json);
+            if (parsed == null) {
+                return null;
+            }
+
             var character = parsed.EagerLoad.Character;
 
             // get character name
@@ -113,7 +117,7 @@ namespace ExpandedSearchInfo.Providers {
             return new RefsheetSection(
                 this,
                 $"{name} (Refsheet)",
-                response.RequestMessage.RequestUri,
+                response.RequestMessage!.RequestUri!,
                 attributes,
                 notes,
                 cards

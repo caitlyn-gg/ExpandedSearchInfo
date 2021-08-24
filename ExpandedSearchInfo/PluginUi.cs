@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Numerics;
 using Dalamud.Interface;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 
 namespace ExpandedSearchInfo {
@@ -18,17 +19,17 @@ namespace ExpandedSearchInfo {
         internal PluginUi(Plugin plugin) {
             this.Plugin = plugin;
 
-            this.Plugin.Interface.UiBuilder.OnBuildUi += this.Draw;
-            this.Plugin.Interface.UiBuilder.OnOpenConfigUi += this.OnOpenConfigUi;
+            this.Plugin.Interface.UiBuilder.Draw += this.Draw;
+            this.Plugin.Interface.UiBuilder.OpenConfigUi += this.OnOpenConfigUi;
         }
 
-        private void OnOpenConfigUi(object sender, EventArgs e) {
+        private void OnOpenConfigUi() {
             this.ConfigVisible = true;
         }
 
         public void Dispose() {
-            this.Plugin.Interface.UiBuilder.OnOpenConfigUi -= this.OnOpenConfigUi;
-            this.Plugin.Interface.UiBuilder.OnBuildUi -= this.Draw;
+            this.Plugin.Interface.UiBuilder.OpenConfigUi -= this.OnOpenConfigUi;
+            this.Plugin.Interface.UiBuilder.Draw -= this.Draw;
         }
 
         private static bool IconButton(FontAwesomeIcon icon, string? id = null) {
@@ -128,30 +129,31 @@ namespace ExpandedSearchInfo {
             ImGui.End();
         }
 
-        private void DrawExpandedSearchInfo() {
+        private unsafe void DrawExpandedSearchInfo() {
             // check if the examine window is open
-            var addon = this.Plugin.Interface.Framework.Gui.GetAddonByName("CharacterInspect", 1);
-            if (addon is not {Visible: true}) {
+            var addonPtr = this.Plugin.GameGui.GetAddonByName("CharacterInspect", 1);
+            if (addonPtr == IntPtr.Zero) {
+                return;
+            }
+
+            var addon = (AtkUnitBase*) addonPtr;
+            if (addon->IsVisible) {
                 return;
             }
 
             // get examine window info
-            float width;
-            float height;
-            short x;
-            short y;
-
-            try {
-                width = addon.Width;
-                height = addon.Height;
-                x = addon.X;
-                y = addon.Y;
-            } catch (Exception) {
+            var rootNode = addon->RootNode;
+            if (rootNode == null) {
                 return;
             }
 
+            var width = rootNode->Width * addon->Scale;
+            var height = rootNode->Height * addon->Scale;
+            var x = addon->X;
+            var y = addon->Y;
+
             // check the last actor id recorded (should be who the examine window is showing)
-            var actorId = this.Plugin.Repository.LastActorId;
+            var actorId = this.Plugin.Repository.LastObjectId;
             if (actorId == 0 || !this.Plugin.Repository.SearchInfos.TryGetValue(actorId, out var expanded)) {
                 return;
             }

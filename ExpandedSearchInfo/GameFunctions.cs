@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 
 namespace ExpandedSearchInfo {
     public class GameFunctions : IDisposable {
@@ -12,15 +11,15 @@ namespace ExpandedSearchInfo {
 
         private readonly Hook<SearchInfoDownloadedDelegate>? _searchInfoDownloadedHook;
 
-        internal delegate void ReceiveSearchInfoEventDelegate(int actorId, SeString info);
+        internal delegate void ReceiveSearchInfoEventDelegate(uint objectId, SeString info);
 
         internal event ReceiveSearchInfoEventDelegate? ReceiveSearchInfo;
 
         internal GameFunctions(Plugin plugin) {
             this.Plugin = plugin;
 
-            var sidPtr = this.Plugin.Interface.TargetModuleScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 56 48 83 EC 20 49 8B E8 8B DA");
-            this._searchInfoDownloadedHook = new Hook<SearchInfoDownloadedDelegate>(sidPtr, new SearchInfoDownloadedDelegate(this.SearchInfoDownloaded));
+            var sidPtr = this.Plugin.SigScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 56 48 83 EC 20 49 8B E8 8B DA");
+            this._searchInfoDownloadedHook = new Hook<SearchInfoDownloadedDelegate>(sidPtr, this.SearchInfoDownloaded);
             this._searchInfoDownloadedHook.Enable();
         }
 
@@ -28,14 +27,14 @@ namespace ExpandedSearchInfo {
             this._searchInfoDownloadedHook?.Dispose();
         }
 
-        private byte SearchInfoDownloaded(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4) {
+        private unsafe byte SearchInfoDownloaded(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4) {
             var result = this._searchInfoDownloadedHook!.Original(data, a2, searchInfoPtr, a4);
 
             try {
                 // Updated: 4.5
-                var actorId = Marshal.ReadInt32(data + 48);
+                var actorId = *(uint*) (data + 48);
 
-                var searchInfo = this.Plugin.Interface.SeStringManager.ReadRawSeString(searchInfoPtr);
+                var searchInfo = this.Plugin.SeStringManager.ReadRawSeString(searchInfoPtr);
 
                 this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
             } catch (Exception ex) {

@@ -1,4 +1,9 @@
-﻿using Dalamud.Game.Command;
+﻿using Dalamud.Game;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.Command;
+using Dalamud.Game.Gui;
+using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.IoC;
 using Dalamud.Plugin;
 
 namespace ExpandedSearchInfo {
@@ -6,15 +11,30 @@ namespace ExpandedSearchInfo {
     public class Plugin : IDalamudPlugin {
         public string Name => "Expanded Search Info";
 
-        internal PluginConfiguration Config { get; private set; } = null!;
-        internal DalamudPluginInterface Interface { get; private set; } = null!;
-        internal GameFunctions Functions { get; private set; } = null!;
-        internal SearchInfoRepository Repository { get; private set; } = null!;
-        private PluginUi Ui { get; set; } = null!;
+        [PluginService]
+        internal DalamudPluginInterface Interface { get; init; } = null!;
 
-        public void Initialize(DalamudPluginInterface pluginInterface) {
-            this.Interface = pluginInterface;
+        [PluginService]
+        internal CommandManager CommandManager { get; init; } = null!;
 
+        [PluginService]
+        internal GameGui GameGui { get; init; } = null!;
+
+        [PluginService]
+        internal ObjectTable ObjectTable { get; init; } = null!;
+
+        [PluginService]
+        internal SeStringManager SeStringManager { get; init; } = null!;
+
+        [PluginService]
+        internal SigScanner SigScanner { get; init; } = null!;
+
+        internal PluginConfiguration Config { get; }
+        internal GameFunctions Functions { get; }
+        internal SearchInfoRepository Repository { get; }
+        private PluginUi Ui { get; }
+
+        public Plugin() {
             this.Config = (PluginConfiguration?) this.Interface.GetPluginConfig() ?? new PluginConfiguration();
             this.Config.Initialise(this);
 
@@ -22,13 +42,13 @@ namespace ExpandedSearchInfo {
             this.Repository = new SearchInfoRepository(this);
             this.Ui = new PluginUi(this);
 
-            this.Interface.CommandManager.AddHandler("/esi", new CommandInfo(this.OnCommand) {
+            this.CommandManager.AddHandler("/esi", new CommandInfo(this.OnCommand) {
                 HelpMessage = "Toggles Expanded Search Info's configuration window",
             });
         }
 
         public void Dispose() {
-            this.Interface.CommandManager.RemoveHandler("/esi");
+            this.CommandManager.RemoveHandler("/esi");
             this.Ui.Dispose();
             this.Repository.Dispose();
             this.Functions.Dispose();

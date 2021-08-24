@@ -26,17 +26,17 @@ namespace ExpandedSearchInfo.Providers {
 
         public bool Matches(Uri uri) => true;
 
-        public IEnumerable<Uri>? ExtractUris(int actorId, string info) => null;
+        public IEnumerable<Uri>? ExtractUris(uint objectId, string info) => null;
 
         public async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
-            if (response.Content.Headers.ContentType.MediaType != "text/plain") {
+            if (response.Content.Headers.ContentType?.MediaType != "text/plain") {
                 return null;
             }
 
             var info = await response.Content.ReadAsStringAsync();
 
-            var uri = response.RequestMessage.RequestUri;
-            return new TextSection(this, $"Text##{uri}", response.RequestMessage.RequestUri, info);
+            var uri = response.RequestMessage!.RequestUri!;
+            return new TextSection(this, $"Text##{uri}", uri, info);
         }
     }
 }

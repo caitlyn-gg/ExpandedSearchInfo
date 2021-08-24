@@ -34,10 +34,10 @@ namespace ExpandedSearchInfo.Providers {
         ///     For providers that require Uris, this can return null.
         ///     For providers that don't require Uris, this must return a Uri extracted from the given search info.
         /// </summary>
-        /// <param name="actorId">The actor ID associated with the search info</param>
+        /// <param name="objectId">The actor ID associated with the search info</param>
         /// <param name="info">A character's full search info</param>
         /// <returns>null for providers that require Uris, a Uri for providers that don't</returns>
-        IEnumerable<Uri>? ExtractUris(int actorId, string info);
+        IEnumerable<Uri>? ExtractUris(uint objectId, string info);
 
         /// <summary>
         ///     Extract the search info to be displayed given the HTTP response from a Uri.

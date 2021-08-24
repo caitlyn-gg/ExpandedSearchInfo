@@ -34,7 +34,7 @@ namespace ExpandedSearchInfo.Providers {
 
         public override bool Matches(Uri uri) => Domains.Any(domain => uri.Host.EndsWith(domain));
 
-        public override IEnumerable<Uri>? ExtractUris(int actorId, string info) => null;
+        public override IEnumerable<Uri>? ExtractUris(uint objectId, string info) => null;
 
         public override async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
             var document = await this.DownloadDocument(response);
@@ -83,7 +83,7 @@ namespace ExpandedSearchInfo.Providers {
             return new TextSection(
                 this,
                 $"{document.Title} (Carrd)",
-                response.RequestMessage.RequestUri,
+                response.RequestMessage!.RequestUri!,
                 text
             );
         }

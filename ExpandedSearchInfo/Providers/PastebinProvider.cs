@@ -30,7 +30,7 @@ namespace ExpandedSearchInfo.Providers {
 
         public bool Matches(Uri uri) => uri.Host == "pastebin.com" && uri.AbsolutePath.Length > 1;
 
-        public IEnumerable<Uri>? ExtractUris(int actorId, string info) {
+        public IEnumerable<Uri>? ExtractUris(uint objectId, string info) {
             var matches = Matcher.Matches(info);
             return matches.Count == 0
                 ? null
@@ -38,11 +38,11 @@ namespace ExpandedSearchInfo.Providers {
         }
 
         public async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
-            if (response.Content.Headers.ContentType.MediaType != "text/plain") {
+            if (response.Content.Headers.ContentType?.MediaType != "text/plain") {
                 return null;
             }
 
-            var id = response.RequestMessage.RequestUri.AbsolutePath.Split('/').LastOrDefault();
+            var id = response.RequestMessage!.RequestUri!.AbsolutePath.Split('/').LastOrDefault();
 
             var info = await response.Content.ReadAsStringAsync();
 

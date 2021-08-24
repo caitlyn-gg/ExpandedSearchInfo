@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Plugin;
+using Dalamud.Logging;
 using ExpandedSearchInfo.Providers;
 using ExpandedSearchInfo.Sections;
 using Nager.PublicSuffix;
@@ -26,8 +25,8 @@ namespace ExpandedSearchInfo {
     public class SearchInfoRepository : IDisposable {
         private Plugin Plugin { get; }
         private DomainParser Parser { get; }
-        internal ConcurrentDictionary<int, ExpandedSearchInfo> SearchInfos { get; } = new();
-        internal int LastActorId { get; private set; }
+        internal ConcurrentDictionary<uint, ExpandedSearchInfo> SearchInfos { get; } = new();
+        internal uint LastObjectId { get; private set; }
 
         private List<IProvider> Providers { get; } = new();
         internal IEnumerable<IProvider> AllProviders => this.Providers;
@@ -62,48 +61,48 @@ namespace ExpandedSearchInfo {
             this.Providers.Add(new PlainTextProvider(this.Plugin));
         }
 
-        private void ProcessSearchInfo(int actorId, SeString raw) {
-            this.LastActorId = actorId;
+        private void ProcessSearchInfo(uint objectId, SeString raw) {
+            this.LastObjectId = objectId;
 
             var info = raw.TextValue;
 
             // if empty search info, short circuit
             if (string.IsNullOrWhiteSpace(info)) {
                 // remove any existing search info
-                this.SearchInfos.TryRemove(actorId, out _);
+                this.SearchInfos.TryRemove(objectId, out _);
                 return;
             }
 
             // check to see if info has changed
             #if RELEASE
-            if (this.SearchInfos.TryGetValue(actorId, out var existing)) {
+            if (this.SearchInfos.TryGetValue(objectId, out var existing)) {
                 if (existing.Info == info) {
                     return;
                 }
             }
             #endif
 
-            new Thread(async () => {
+            Task.Run(async () => {
                 try {
-                    await this.DoExtraction(actorId, info);
+                    await this.DoExtraction(objectId, info);
                 } catch (Exception ex) {
                     PluginLog.LogError($"Error in extraction thread:\n{ex}");
                 }
-            }).Start();
+            });
         }
 
-        private async Task DoExtraction(int actorId, string info) {
+        private async Task DoExtraction(uint objectId, string info) {
             var downloadUris = new List<Uri>();
 
             // extract uris from the search info with providers
             var extractedUris = this.Providers
                 .Where(provider => provider.Config.Enabled && provider.ExtractsUris)
-                .Select(provider => provider.ExtractUris(actorId, info))
+                .Select(provider => provider.ExtractUris(objectId, info))
                 .Where(uris => uris != null)
-                .SelectMany(uris => uris);
+                .SelectMany(uris => uris!);
 
             // add the extracted uris to the list
-            downloadUris.AddRange(extractedUris!);
+            downloadUris.AddRange(extractedUris);
 
             // go word-by-word and try to parse a uri
             foreach (var word in info.Split(' ', '\n', '\r')) {
@@ -128,15 +127,15 @@ namespace ExpandedSearchInfo {
 
             // if there were no uris found or extracted, remove existing search info and stop
             if (downloadUris.Count == 0) {
-                this.SearchInfos.TryRemove(actorId, out _);
+                this.SearchInfos.TryRemove(objectId, out _);
                 return;
             }
 
             // do the downloads
-            await this.DownloadAndExtract(actorId, info, downloadUris);
+            await this.DownloadAndExtract(objectId, info, downloadUris);
         }
 
-        private async Task DownloadAndExtract(int actorId, string info, IEnumerable<Uri> uris) {
+        private async Task DownloadAndExtract(uint objectId, string info, IEnumerable<Uri> uris) {
             var handler = new HttpClientHandler {
                 UseCookies = true,
                 AllowAutoRedirect = true,
@@ -183,12 +182,12 @@ namespace ExpandedSearchInfo {
 
             // remove expanded search info if no sections resulted
             if (sections.Count == 0) {
-                this.SearchInfos.TryRemove(actorId, out _);
+                this.SearchInfos.TryRemove(objectId, out _);
                 return;
             }
 
             // otherwise set the expanded search info for this actor id
-            this.SearchInfos[actorId] = new ExpandedSearchInfo(info, sections);
+            this.SearchInfos[objectId] = new ExpandedSearchInfo(info, sections);
         }
     }
 }

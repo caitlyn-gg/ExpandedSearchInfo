@@ -27,19 +27,19 @@ namespace ExpandedSearchInfo.Providers {
         public override void DrawConfig() {
         }
 
-        public override bool Matches(Uri uri) => (uri.Host == "www.f-list.net" || uri.Host == "f-list.net") && uri.AbsolutePath.StartsWith("/c/");
+        public override bool Matches(Uri uri) => uri.Host is "www.f-list.net" or "f-list.net" && uri.AbsolutePath.StartsWith("/c/");
 
-        public override IEnumerable<Uri>? ExtractUris(int actorId, string info) {
+        public override IEnumerable<Uri>? ExtractUris(uint objectId, string info) {
             if (!info.ToLowerInvariant().Contains("c/")) {
                 return null;
             }
 
-            var actor = this.Plugin.Interface.ClientState.Actors.FirstOrDefault(actor => actor.ActorId == actorId);
-            if (actor == null) {
+            var obj = this.Plugin.ObjectTable.FirstOrDefault(obj => obj.ObjectId == objectId);
+            if (obj == null) {
                 return null;
             }
 
-            var safeName = actor.Name.Replace("'", "");
+            var safeName = obj.Name.ToString().Replace("'", "");
 
             return new[] {
                 new Uri($"https://www.f-list.net/c/{Uri.EscapeUriString(safeName)}"),
@@ -99,7 +99,7 @@ namespace ExpandedSearchInfo.Providers {
             return new FListSection(
                 this,
                 $"{charName} (F-List)",
-                response.RequestMessage.RequestUri,
+                response.RequestMessage!.RequestUri!,
                 info,
                 stats,
                 fave,
