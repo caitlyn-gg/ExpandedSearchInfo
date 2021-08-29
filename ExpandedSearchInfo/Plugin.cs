@@ -2,7 +2,6 @@
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
-using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 
@@ -22,9 +21,6 @@ namespace ExpandedSearchInfo {
 
         [PluginService]
         internal ObjectTable ObjectTable { get; init; } = null!;
-
-        [PluginService]
-        internal SeStringManager SeStringManager { get; init; } = null!;
 
         [PluginService]
         internal SigScanner SigScanner { get; init; } = null!;

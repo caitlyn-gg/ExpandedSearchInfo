@@ -8,7 +8,7 @@ namespace ExpandedSearchInfo {
     internal static class Util {
         private static readonly Regex BbCodeTag = new(@"\[/?\w+(?:=.+?)?\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        internal static unsafe SeString ReadRawSeString(this SeStringManager manager, IntPtr data) {
+        internal static unsafe SeString ReadRawSeString(IntPtr data) {
             var bytes = new List<byte>();
 
             var ptr = (byte*) data;
@@ -17,7 +17,7 @@ namespace ExpandedSearchInfo {
                 ptr += 1;
             }
 
-            return manager.Parse(bytes.ToArray());
+            return SeString.Parse(bytes.ToArray());
         }
 
         internal static string StripBbCode(this string input) => BbCodeTag.Replace(input, "");

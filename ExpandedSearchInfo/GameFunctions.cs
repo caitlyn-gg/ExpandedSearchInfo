@@ -34,7 +34,7 @@ namespace ExpandedSearchInfo {
                 // Updated: 4.5
                 var actorId = *(uint*) (data + 48);
 
-                var searchInfo = this.Plugin.SeStringManager.ReadRawSeString(searchInfoPtr);
+                var searchInfo = Util.ReadRawSeString(searchInfoPtr);
 
                 this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
             } catch (Exception ex) {

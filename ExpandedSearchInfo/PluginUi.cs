@@ -137,7 +137,7 @@ namespace ExpandedSearchInfo {
             }
 
             var addon = (AtkUnitBase*) addonPtr;
-            if (addon->IsVisible) {
+            if (!addon->IsVisible) {
                 return;
             }
 
@@ -166,6 +166,7 @@ namespace ExpandedSearchInfo {
             ImGui.SetNextWindowSize(new Vector2(-1, -1));
 
             if (!ImGui.Begin(this.Plugin.Name, ImGuiWindowFlags.NoTitleBar)) {
+                ImGui.End();
                 return;
             }
 
