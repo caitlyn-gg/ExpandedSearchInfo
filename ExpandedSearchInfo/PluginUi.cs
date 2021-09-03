@@ -187,7 +187,10 @@ namespace ExpandedSearchInfo {
                 ImGui.TreePush();
 
                 if (IconButton(FontAwesomeIcon.ExternalLinkAlt, $"open-{i}")) {
-                    Process.Start(section.Uri.ToString());
+                    Process.Start(new ProcessStartInfo {
+                        FileName = section.Uri.ToString(),
+                        UseShellExecute = true,
+                    });
                 }
 
                 if (ImGui.IsItemHovered()) {
