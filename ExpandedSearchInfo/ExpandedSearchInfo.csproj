@@ -35,7 +35,7 @@
 
     <ItemGroup>
         <PackageReference Include="AngleSharp" Version="1.0.0-alpha-844"/>
-        <PackageReference Include="DalamudPackager" Version="2.1.2"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.5"/>
         <PackageReference Include="Nager.PublicSuffix" Version="2.2.2"/>
     </ItemGroup>
 
