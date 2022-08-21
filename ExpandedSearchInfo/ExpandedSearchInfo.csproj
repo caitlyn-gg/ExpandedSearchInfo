@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net6-windows</TargetFramework>
-        <Version>1.3.8</Version>
+        <Version>1.3.9</Version>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
