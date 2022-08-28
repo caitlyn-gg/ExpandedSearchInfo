@@ -45,5 +45,12 @@ namespace ExpandedSearchInfo.Providers {
         /// <param name="response">HTTP response from a Uri</param>
         /// <returns>null if search info could not be extracted or the search info as a string if it could</returns>
         Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response);
+
+        /// <summary>
+        ///     Modify any requests made for this provider before they are sent.
+        /// </summary>
+        /// <param name="request">HTTP request about to be sent</param>
+        void ModifyRequest(HttpRequestMessage request) {
+        }
     }
 }

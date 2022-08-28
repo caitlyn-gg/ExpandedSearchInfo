@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Logging;
@@ -142,13 +143,19 @@ namespace ExpandedSearchInfo {
                 MaxAutomaticRedirections = 5,
             };
             handler.CookieContainer.Add(new Cookie("warning", "1", "/", "www.f-list.net"));
-            var client = new HttpClient(handler);
+
+            var version = this.GetType().Assembly.GetName().Version?.ToString(3) ?? "unknown";
+            var client = new HttpClient(handler) {
+                DefaultRequestHeaders = {
+                    UserAgent = { new ProductInfoHeaderValue("ExpandedSearchInfo", version) },
+                },
+            };
 
             var sections = new List<ISearchInfoSection>();
 
             // run through each extracted uri
             foreach (var uri in uris) {
-                if (uri.Scheme != "http" && uri.Scheme != "https") {
+                if (uri.Scheme is not ("http" or "https")) {
                     continue;
                 }
 
@@ -163,7 +170,12 @@ namespace ExpandedSearchInfo {
                 }
 
                 // get the http response from the uri and make sure it's ok
-                var resp = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+                var req = new HttpRequestMessage(HttpMethod.Get, uri);
+                foreach (var provider in matching) {
+                    provider.ModifyRequest(req);
+                }
+
+                var resp = await client.SendAsync(req);
                 if (resp.StatusCode != HttpStatusCode.OK) {
                     continue;
                 }
