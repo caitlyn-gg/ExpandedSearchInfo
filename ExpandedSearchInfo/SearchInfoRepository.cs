@@ -175,7 +175,7 @@ namespace ExpandedSearchInfo {
                     provider.ModifyRequest(req);
                 }
 
-                var resp = await client.SendAsync(req);
+                var resp = await client.SendAsync(req, HttpCompletionOption.ResponseHeadersRead);
                 if (resp.StatusCode != HttpStatusCode.OK) {
                     continue;
                 }
