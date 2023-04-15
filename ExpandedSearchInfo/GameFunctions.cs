@@ -19,7 +19,7 @@ namespace ExpandedSearchInfo {
             this.Plugin = plugin;
 
             var sidPtr = this.Plugin.SigScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 56 48 83 EC 20 49 8B E8 8B DA");
-            this._searchInfoDownloadedHook = new Hook<SearchInfoDownloadedDelegate>(sidPtr, this.SearchInfoDownloaded);
+            this._searchInfoDownloadedHook = Hook<SearchInfoDownloadedDelegate>.FromAddress(sidPtr, this.SearchInfoDownloaded);
             this._searchInfoDownloadedHook.Enable();
         }
 
@@ -33,12 +33,13 @@ namespace ExpandedSearchInfo {
             try {
                 // Updated: 4.5
                 var actorId = *(uint*) (data + 48);
+                PluginLog.Log($"actorId: {actorId:x8}");
 
                 var searchInfo = Util.ReadRawSeString(searchInfoPtr);
 
                 this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
             } catch (Exception ex) {
-                PluginLog.LogError($"Error in SearchInfoDownloaded hook\n{ex}");
+                PluginLog.LogError(ex, "Error in SearchInfoDownloaded hook");
             }
 
             return result;
