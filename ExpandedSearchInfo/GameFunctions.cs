@@ -33,7 +33,6 @@ namespace ExpandedSearchInfo {
             try {
                 // Updated: 4.5
                 var actorId = *(uint*) (data + 48);
-                PluginLog.Log($"actorId: {actorId:x8}");
 
                 var searchInfo = Util.ReadRawSeString(searchInfoPtr);
 

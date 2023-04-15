@@ -87,7 +87,7 @@ namespace ExpandedSearchInfo {
                 try {
                     await this.DoExtraction(objectId, info);
                 } catch (Exception ex) {
-                    PluginLog.LogError($"Error in extraction thread:\n{ex}");
+                    PluginLog.LogError(ex, "Error in extraction thread");
                 }
             });
         }
