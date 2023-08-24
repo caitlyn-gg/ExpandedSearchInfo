@@ -1,4 +1,4 @@
-﻿author: ascclemens
+﻿author: Anna
 name: Expanded Search Info
 punchline: Displays extra information pulled from search info when examining.
 description: |-
@@ -15,4 +15,4 @@ description: |-
   these locations and the plugin will display information automatically.
 
   Icon: expand by Gregor Cresnar from the Noun Project
-repo_url: https://git.sr.ht/~jkcclemens/ExpandedSearchInfo
+repo_url: https://git.anna.lgbt/anna/ExpandedSearchInfo
