@@ -1,23 +1,23 @@
 ﻿using System;
 using ExpandedSearchInfo.Providers;
 
-namespace ExpandedSearchInfo.Sections {
-    public class TextSection : ISearchInfoSection {
-        public IProvider Provider { get; }
-        public string Name { get; }
-        public Uri Uri { get; }
+namespace ExpandedSearchInfo.Sections; 
 
-        private string Info { get; }
+public class TextSection : ISearchInfoSection {
+    public IProvider Provider { get; }
+    public string Name { get; }
+    public Uri Uri { get; }
 
-        internal TextSection(IProvider provider, string name, Uri uri, string info) {
-            this.Provider = provider;
-            this.Name = name;
-            this.Uri = uri;
-            this.Info = info;
-        }
+    private string Info { get; }
 
-        public void Draw() {
-            Util.DrawLines(this.Info);
-        }
+    internal TextSection(IProvider provider, string name, Uri uri, string info) {
+        this.Provider = provider;
+        this.Name = name;
+        this.Uri = uri;
+        this.Info = info;
+    }
+
+    public void Draw() {
+        Util.DrawLines(this.Info);
     }
 }

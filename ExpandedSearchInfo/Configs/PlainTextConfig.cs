@@ -1,4 +1,4 @@
-﻿namespace ExpandedSearchInfo.Configs {
-    public class PlainTextConfig : BaseConfig {
-    }
+﻿namespace ExpandedSearchInfo.Configs; 
+
+public class PlainTextConfig : BaseConfig {
 }

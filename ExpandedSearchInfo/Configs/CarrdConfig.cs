@@ -1,4 +1,4 @@
-﻿namespace ExpandedSearchInfo.Configs {
-    public class CarrdConfig : BaseConfig {
-    }
+﻿namespace ExpandedSearchInfo.Configs; 
+
+public class CarrdConfig : BaseConfig {
 }

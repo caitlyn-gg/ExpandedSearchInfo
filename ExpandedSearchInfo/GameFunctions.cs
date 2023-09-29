@@ -1,47 +1,46 @@
 ﻿using System;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
-using Dalamud.Logging;
 
-namespace ExpandedSearchInfo {
-    public class GameFunctions : IDisposable {
-        private Plugin Plugin { get; }
+namespace ExpandedSearchInfo; 
 
-        private delegate byte SearchInfoDownloadedDelegate(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4);
+public class GameFunctions : IDisposable {
+    private Plugin Plugin { get; }
 
-        private readonly Hook<SearchInfoDownloadedDelegate>? _searchInfoDownloadedHook;
+    private delegate byte SearchInfoDownloadedDelegate(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4);
 
-        internal delegate void ReceiveSearchInfoEventDelegate(uint objectId, SeString info);
+    private readonly Hook<SearchInfoDownloadedDelegate>? _searchInfoDownloadedHook;
 
-        internal event ReceiveSearchInfoEventDelegate? ReceiveSearchInfo;
+    internal delegate void ReceiveSearchInfoEventDelegate(uint objectId, SeString info);
 
-        internal GameFunctions(Plugin plugin) {
-            this.Plugin = plugin;
+    internal event ReceiveSearchInfoEventDelegate? ReceiveSearchInfo;
 
-            var sidPtr = this.Plugin.SigScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 56 48 83 EC 20 49 8B E8 8B DA");
-            this._searchInfoDownloadedHook = Hook<SearchInfoDownloadedDelegate>.FromAddress(sidPtr, this.SearchInfoDownloaded);
-            this._searchInfoDownloadedHook.Enable();
+    internal GameFunctions(Plugin plugin) {
+        this.Plugin = plugin;
+
+        var sidPtr = this.Plugin.SigScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 56 48 83 EC 20 49 8B E8 8B DA");
+        this._searchInfoDownloadedHook = this.Plugin.GameInteropProvider.HookFromAddress<SearchInfoDownloadedDelegate>(sidPtr, this.SearchInfoDownloaded);
+        this._searchInfoDownloadedHook.Enable();
+    }
+
+    public void Dispose() {
+        this._searchInfoDownloadedHook?.Dispose();
+    }
+
+    private unsafe byte SearchInfoDownloaded(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4) {
+        var result = this._searchInfoDownloadedHook!.Original(data, a2, searchInfoPtr, a4);
+
+        try {
+            // Updated: 4.5
+            var actorId = *(uint*) (data + 48);
+
+            var searchInfo = Util.ReadRawSeString(searchInfoPtr);
+
+            this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
+        } catch (Exception ex) {
+            Plugin.Log.Error(ex, "Error in SearchInfoDownloaded hook");
         }
 
-        public void Dispose() {
-            this._searchInfoDownloadedHook?.Dispose();
-        }
-
-        private unsafe byte SearchInfoDownloaded(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4) {
-            var result = this._searchInfoDownloadedHook!.Original(data, a2, searchInfoPtr, a4);
-
-            try {
-                // Updated: 4.5
-                var actorId = *(uint*) (data + 48);
-
-                var searchInfo = Util.ReadRawSeString(searchInfoPtr);
-
-                this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
-            } catch (Exception ex) {
-                PluginLog.LogError(ex, "Error in SearchInfoDownloaded hook");
-            }
-
-            return result;
-        }
+        return result;
     }
 }

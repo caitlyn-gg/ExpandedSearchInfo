@@ -1,4 +1,4 @@
-﻿namespace ExpandedSearchInfo.Configs {
-    public class RefsheetConfig : BaseConfig {
-    }
+﻿namespace ExpandedSearchInfo.Configs; 
+
+public class RefsheetConfig : BaseConfig {
 }
