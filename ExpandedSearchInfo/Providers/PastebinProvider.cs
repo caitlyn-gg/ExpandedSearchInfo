@@ -1,13 +1,13 @@
-﻿using System;
+﻿using ExpandedSearchInfo.Configs;
+using ExpandedSearchInfo.Sections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ExpandedSearchInfo.Configs;
-using ExpandedSearchInfo.Sections;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public class PastebinProvider : IProvider {
     private static readonly Regex Matcher = new(@"pb:(\S+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);

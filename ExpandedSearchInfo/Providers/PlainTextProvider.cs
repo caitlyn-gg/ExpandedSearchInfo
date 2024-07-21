@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ExpandedSearchInfo.Configs;
+using ExpandedSearchInfo.Sections;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using ExpandedSearchInfo.Configs;
-using ExpandedSearchInfo.Sections;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public class PlainTextProvider : IProvider {
     private Plugin Plugin { get; }

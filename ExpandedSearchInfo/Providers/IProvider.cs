@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ExpandedSearchInfo.Configs;
+using ExpandedSearchInfo.Sections;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ExpandedSearchInfo.Configs;
-using ExpandedSearchInfo.Sections;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public interface IProvider {
     string Name { get; }

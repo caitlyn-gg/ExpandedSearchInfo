@@ -1,7 +1,7 @@
-﻿using System;
-using ExpandedSearchInfo.Providers;
+﻿using ExpandedSearchInfo.Providers;
+using System;
 
-namespace ExpandedSearchInfo.Sections; 
+namespace ExpandedSearchInfo.Sections;
 
 public class TextSection : ISearchInfoSection {
     public IProvider Provider { get; }

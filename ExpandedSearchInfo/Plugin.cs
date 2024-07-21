@@ -4,7 +4,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
-namespace ExpandedSearchInfo; 
+namespace ExpandedSearchInfo;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class Plugin : IDalamudPlugin {

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ExpandedSearchInfo.Providers;
+using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ExpandedSearchInfo.Providers;
-using ImGuiNET;
 
-namespace ExpandedSearchInfo.Sections; 
+namespace ExpandedSearchInfo.Sections;
 
 public class FListSection : ISearchInfoSection {
     public IProvider Provider { get; }

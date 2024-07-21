@@ -1,4 +1,4 @@
-﻿namespace ExpandedSearchInfo.Configs; 
+﻿namespace ExpandedSearchInfo.Configs;
 
 public abstract class BaseConfig {
     public bool Enabled { get; set; } = true;

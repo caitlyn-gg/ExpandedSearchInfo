@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Dalamud.Game.Text.SeStringHandling;
+using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Dalamud.Game.Text.SeStringHandling;
-using ImGuiNET;
 
-namespace ExpandedSearchInfo; 
+namespace ExpandedSearchInfo;
 
 internal static class Util {
     private static readonly Regex BbCodeTag = new(@"\[/?\w+(?:=.+?)?\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -25,7 +25,7 @@ internal static class Util {
 
     internal static void DrawLines(string input) {
         // FIXME: this is a workaround for imgui breaking on extremely long strings
-        foreach (var line in input.Split(new[] {"\n", "\r", "\r\n"}, StringSplitOptions.None)) {
+        foreach (var line in input.Split(new[] { "\n", "\r", "\r\n" }, StringSplitOptions.None)) {
             ImGui.TextUnformatted(line);
         }
     }

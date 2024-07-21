@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AngleSharp;
+﻿using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public abstract class BaseHtmlProvider : IProvider {
     private IBrowsingContext Context { get; } = BrowsingContext.New();

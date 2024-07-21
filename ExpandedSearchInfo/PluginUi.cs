@@ -1,12 +1,12 @@
-﻿using System;
-using System.Diagnostics;
-using System.Numerics;
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
+using System;
+using System.Diagnostics;
+using System.Numerics;
 
-namespace ExpandedSearchInfo; 
+namespace ExpandedSearchInfo;
 
 public class PluginUi : IDisposable {
     private Plugin Plugin { get; }

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using AngleSharp.Dom;
+using ExpandedSearchInfo.Configs;
+using ExpandedSearchInfo.Sections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
-using ExpandedSearchInfo.Configs;
-using ExpandedSearchInfo.Sections;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public class CarrdProvider : BaseHtmlProvider {
     private static readonly string[] Domains = {

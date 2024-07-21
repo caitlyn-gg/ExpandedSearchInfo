@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ExpandedSearchInfo.Providers;
+﻿using ExpandedSearchInfo.Providers;
 using ImGuiNET;
+using System;
+using System.Collections.Generic;
 
-namespace ExpandedSearchInfo.Sections; 
+namespace ExpandedSearchInfo.Sections;
 
 public class RefsheetSection : ISearchInfoSection {
     public IProvider Provider { get; }

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AngleSharp.Dom;
+using ExpandedSearchInfo.Configs;
+using ExpandedSearchInfo.Sections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
-using ExpandedSearchInfo.Configs;
-using ExpandedSearchInfo.Sections;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public class FListProvider : BaseHtmlProvider {
     private Plugin Plugin { get; }

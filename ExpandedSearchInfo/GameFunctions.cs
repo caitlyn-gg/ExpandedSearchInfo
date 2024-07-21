@@ -1,8 +1,8 @@
-﻿using System;
-using Dalamud.Game.Text.SeStringHandling;
+﻿using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
+using System;
 
-namespace ExpandedSearchInfo; 
+namespace ExpandedSearchInfo;
 
 public class GameFunctions : IDisposable {
     private Plugin Plugin { get; }

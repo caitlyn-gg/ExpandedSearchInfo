@@ -1,14 +1,14 @@
-﻿using System;
+﻿using ExpandedSearchInfo.Configs;
+using ExpandedSearchInfo.Sections;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ExpandedSearchInfo.Configs;
-using ExpandedSearchInfo.Sections;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-namespace ExpandedSearchInfo.Providers; 
+namespace ExpandedSearchInfo.Providers;
 
 public class RefsheetProvider : BaseHtmlProvider {
     private const string JsonLineStart = "var props = ";
@@ -125,7 +125,7 @@ public class RefsheetProvider : BaseHtmlProvider {
         );
     }
 
-    #pragma warning disable 8618
+#pragma warning disable 8618
     [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     private class RefsheetData {
         public RefsheetEagerLoad EagerLoad { get; set; }
@@ -158,5 +158,5 @@ public class RefsheetProvider : BaseHtmlProvider {
         public string Value { get; set; }
         public string Id { get; set; }
     }
-    #pragma warning restore 8618
+#pragma warning restore 8618
 }

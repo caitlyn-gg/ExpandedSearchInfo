@@ -1,8 +1,8 @@
-﻿using System;
-using Dalamud.Configuration;
+﻿using Dalamud.Configuration;
 using ExpandedSearchInfo.Configs;
+using System;
 
-namespace ExpandedSearchInfo; 
+namespace ExpandedSearchInfo;
 
 [Serializable]
 public class PluginConfiguration : IPluginConfiguration {

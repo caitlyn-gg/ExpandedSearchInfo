@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Dalamud.Game.Text.SeStringHandling;
+using ExpandedSearchInfo.Providers;
+using ExpandedSearchInfo.Sections;
+using Nager.PublicSuffix;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +10,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Dalamud.Game.Text.SeStringHandling;
-using ExpandedSearchInfo.Providers;
-using ExpandedSearchInfo.Sections;
-using Nager.PublicSuffix;
 
-namespace ExpandedSearchInfo; 
+namespace ExpandedSearchInfo;
 
 public class ExpandedSearchInfo {
     public string Info { get; }
@@ -75,13 +75,13 @@ public class SearchInfoRepository : IDisposable {
         }
 
         // check to see if info has changed
-        #if RELEASE
+#if RELEASE
             if (this.SearchInfos.TryGetValue(objectId, out var existing)) {
                 if (existing.Info == info) {
                     return;
                 }
             }
-        #endif
+#endif
 
         Task.Run(async () => {
             try {
