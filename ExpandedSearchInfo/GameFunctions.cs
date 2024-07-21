@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using System;
 
 namespace ExpandedSearchInfo;
@@ -7,40 +8,36 @@ namespace ExpandedSearchInfo;
 public class GameFunctions : IDisposable {
     private Plugin Plugin { get; }
 
-    private delegate byte SearchInfoDownloadedDelegate(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4);
-
-    private readonly Hook<SearchInfoDownloadedDelegate>? _searchInfoDownloadedHook;
+    private readonly Hook<AgentInspect.Delegates.ReceiveSearchComment>? _receiveSearchCommentHook;
 
     internal delegate void ReceiveSearchInfoEventDelegate(uint objectId, SeString info);
 
     internal event ReceiveSearchInfoEventDelegate? ReceiveSearchInfo;
 
-    internal GameFunctions(Plugin plugin) {
+    internal unsafe GameFunctions(Plugin plugin) {
         this.Plugin = plugin;
 
-        var sidPtr = this.Plugin.SigScanner.ScanText("48 89 5C 24 ?? 48 89 6C 24 ?? 56 48 83 EC 20 49 8B E8 8B DA");
-        this._searchInfoDownloadedHook = this.Plugin.GameInteropProvider.HookFromAddress<SearchInfoDownloadedDelegate>(sidPtr, this.SearchInfoDownloaded);
-        this._searchInfoDownloadedHook.Enable();
+        this._receiveSearchCommentHook =
+            this.Plugin.GameInteropProvider.HookFromAddress<AgentInspect.Delegates.ReceiveSearchComment>(
+            AgentInspect.MemberFunctionPointers.ReceiveSearchComment,
+            this.ReceiveSearchComment);
+
+        this._receiveSearchCommentHook.Enable();
     }
 
     public void Dispose() {
-        this._searchInfoDownloadedHook?.Dispose();
+        this._receiveSearchCommentHook?.Dispose();
     }
 
-    private unsafe byte SearchInfoDownloaded(IntPtr data, IntPtr a2, IntPtr searchInfoPtr, IntPtr a4) {
-        var result = this._searchInfoDownloadedHook!.Original(data, a2, searchInfoPtr, a4);
+    private unsafe void ReceiveSearchComment(AgentInspect* _this, uint entityId, byte* searchComment) {
+        this._receiveSearchCommentHook!.Original(_this, entityId, searchComment);
 
         try {
-            // Updated: 4.5
-            var actorId = *(uint*) (data + 48);
+            var searchInfo = Util.ReadRawSeString((nint) searchComment);
 
-            var searchInfo = Util.ReadRawSeString(searchInfoPtr);
-
-            this.ReceiveSearchInfo?.Invoke(actorId, searchInfo);
+            this.ReceiveSearchInfo?.Invoke(entityId, searchInfo);
         } catch (Exception ex) {
-            Plugin.Log.Error(ex, "Error in SearchInfoDownloaded hook");
+            Plugin.Log.Error(ex, "Error in ReceiveSearchComment hook");
         }
-
-        return result;
     }
 }

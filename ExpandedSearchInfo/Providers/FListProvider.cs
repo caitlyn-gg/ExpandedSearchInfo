@@ -3,7 +3,6 @@ using ExpandedSearchInfo.Configs;
 using ExpandedSearchInfo.Sections;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,17 +29,12 @@ public class FListProvider : BaseHtmlProvider {
 
     public override bool Matches(Uri uri) => uri.Host is "www.f-list.net" or "f-list.net" && uri.AbsolutePath.StartsWith("/c/");
 
-    public override IEnumerable<Uri>? ExtractUris(uint objectId, string info) {
-        if (!info.ToLowerInvariant().Contains("c/")) {
+    public override IEnumerable<Uri>? ExtractUris(string name, string comment) {
+        if (!comment.ToLowerInvariant().Contains("c/")) {
             return null;
         }
 
-        var obj = this.Plugin.ObjectTable.FirstOrDefault(obj => obj.ObjectId == objectId);
-        if (obj == null) {
-            return null;
-        }
-
-        var safeName = obj.Name.ToString().Replace("'", "");
+        var safeName = name.ToString().Replace("'", "");
 
         return new[] {
             new Uri($"https://www.f-list.net/c/{Uri.EscapeUriString(safeName)}"),

@@ -35,10 +35,10 @@ public interface IProvider {
     ///     For providers that require Uris, this can return null.
     ///     For providers that don't require Uris, this must return a Uri extracted from the given search info.
     /// </summary>
-    /// <param name="objectId">The actor ID associated with the search info</param>
-    /// <param name="info">A character's full search info</param>
+    /// <param name="name">The character's name</param>
+    /// <param name="comment">A character's full search info</param>
     /// <returns>null for providers that require Uris, a Uri for providers that don't</returns>
-    IEnumerable<Uri>? ExtractUris(uint objectId, string info);
+    IEnumerable<Uri>? ExtractUris(string name, string comment);
 
     /// <summary>
     ///     Extract the search info to be displayed given the HTTP response from a Uri.

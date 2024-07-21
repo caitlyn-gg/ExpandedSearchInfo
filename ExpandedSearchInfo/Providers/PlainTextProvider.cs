@@ -28,7 +28,7 @@ public class PlainTextProvider : IProvider {
 
     public bool Matches(Uri uri) => true;
 
-    public IEnumerable<Uri>? ExtractUris(uint objectId, string info) => null;
+    public IEnumerable<Uri>? ExtractUris(string name, string comment) => null;
 
     public async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
         if (response.Content.Headers.ContentType?.MediaType != "text/plain") {

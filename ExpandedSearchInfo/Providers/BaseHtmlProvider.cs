@@ -25,7 +25,7 @@ public abstract class BaseHtmlProvider : IProvider {
 
     public abstract bool Matches(Uri uri);
 
-    public abstract IEnumerable<Uri>? ExtractUris(uint objectId, string info);
+    public abstract IEnumerable<Uri>? ExtractUris(string name, string comment);
 
     public abstract Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response);
 

@@ -65,10 +65,10 @@ public class SearchInfoRepository : IDisposable {
     private void ProcessSearchInfo(uint objectId, SeString raw) {
         this.LastObjectId = objectId;
 
-        var info = raw.TextValue;
+        var comment = raw.TextValue;
 
         // if empty search info, short circuit
-        if (string.IsNullOrWhiteSpace(info)) {
+        if (string.IsNullOrWhiteSpace(comment)) {
             // remove any existing search info
             this.SearchInfos.TryRemove(objectId, out _);
             return;
@@ -76,29 +76,36 @@ public class SearchInfoRepository : IDisposable {
 
         // check to see if info has changed
 #if RELEASE
-            if (this.SearchInfos.TryGetValue(objectId, out var existing)) {
-                if (existing.Info == info) {
-                    return;
-                }
+        if (this.SearchInfos.TryGetValue(objectId, out var existing)) {
+            if (existing.Info == comment) {
+                return;
             }
+        }
 #endif
+
+        string? name = this.Plugin.ObjectTable.FirstOrDefault(
+            obj => obj.GameObjectId == objectId)?.Name.ToString();
+
+        if (name == null) {
+            return;
+        }
 
         Task.Run(async () => {
             try {
-                await this.DoExtraction(objectId, info);
+                await this.DoExtraction(objectId, name, comment);
             } catch (Exception ex) {
                 Plugin.Log.Error(ex, "Error in extraction thread");
             }
         });
     }
 
-    private async Task DoExtraction(uint objectId, string info) {
+    private async Task DoExtraction(uint objectId, string name, string info) {
         var downloadUris = new List<Uri>();
 
         // extract uris from the search info with providers
         var extractedUris = this.Providers
             .Where(provider => provider.Config.Enabled && provider.ExtractsUris)
-            .Select(provider => provider.ExtractUris(objectId, info))
+            .Select(provider => provider.ExtractUris(name, info))
             .Where(uris => uris != null)
             .SelectMany(uris => uris!);
 

@@ -14,7 +14,7 @@ public class Plugin : IDalamudPlugin {
     internal static IPluginLog Log { get; private set; } = null!;
 
     [PluginService]
-    internal DalamudPluginInterface Interface { get; init; } = null!;
+    internal IDalamudPluginInterface Interface { get; init; } = null!;
 
     [PluginService]
     internal ICommandManager CommandManager { get; init; } = null!;

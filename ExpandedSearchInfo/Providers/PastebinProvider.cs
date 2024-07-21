@@ -31,8 +31,8 @@ public class PastebinProvider : IProvider {
 
     public bool Matches(Uri uri) => uri.Host == "pastebin.com" && uri.AbsolutePath.Length > 1;
 
-    public IEnumerable<Uri>? ExtractUris(uint objectId, string info) {
-        var matches = Matcher.Matches(info);
+    public IEnumerable<Uri>? ExtractUris(string name, string comment) {
+        var matches = Matcher.Matches(comment);
         return matches.Count == 0
             ? null
             : from Match match in matches select match.Groups[1].Value into id select new Uri($"https://pastebin.com/raw/{id}");

@@ -32,7 +32,7 @@ public class RefsheetProvider : BaseHtmlProvider {
 
     public override bool Matches(Uri uri) => uri.Host is "refsheet.net" or "ref.st";
 
-    public override IEnumerable<Uri>? ExtractUris(uint objectId, string info) => null;
+    public override IEnumerable<Uri>? ExtractUris(string name, string comment) => null;
 
     public override async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
         var document = await this.DownloadDocument(response);

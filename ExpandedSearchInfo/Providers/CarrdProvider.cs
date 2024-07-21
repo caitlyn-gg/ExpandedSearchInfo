@@ -35,7 +35,7 @@ public class CarrdProvider : BaseHtmlProvider {
 
     public override bool Matches(Uri uri) => Domains.Any(domain => uri.Host.EndsWith(domain));
 
-    public override IEnumerable<Uri>? ExtractUris(uint objectId, string info) => null;
+    public override IEnumerable<Uri>? ExtractUris(string name, string comment) => null;
 
     public override async Task<ISearchInfoSection?> ExtractInfo(HttpResponseMessage response) {
         var document = await this.DownloadDocument(response);
