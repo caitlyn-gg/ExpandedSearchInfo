@@ -1,4 +1,4 @@
-﻿author: Anna, Caitlyn
+﻿author: caitlyn-gg
 name: Expanded Search Info
 punchline: Displays extra information pulled from search info when examining.
 description: |-
@@ -13,6 +13,8 @@ description: |-
 
   Simply examine someone with a search info containing pointers to one of
   these locations and the plugin will display information automatically.
+
+  Credit to Anna for the original plugin.
 
   Icon: expand by Gregor Cresnar from the Noun Project
 repo_url: https://git.anna.lgbt/anna/ExpandedSearchInfo
