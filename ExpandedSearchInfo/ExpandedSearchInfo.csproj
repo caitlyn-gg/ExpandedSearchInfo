@@ -9,6 +9,7 @@
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <Configurations>Debug;Release;ReleaseNoPackager</Configurations>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -48,7 +49,7 @@
 
     <ItemGroup>
         <PackageReference Include="AngleSharp" Version="1.0.4" />
-        <PackageReference Include="DalamudPackager" Version="2.1.13" />
+        <PackageReference Include="DalamudPackager" Version="11.0.0" />
         <PackageReference Include="Nager.PublicSuffix" Version="2.4.0" />
     </ItemGroup>
 
