@@ -1,7 +1,7 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ImGuiNET;
 using System;
 using System.Diagnostics;
 using System.Numerics;
@@ -138,21 +138,15 @@ public class PluginUi : IDisposable {
             return;
         }
 
-        var addon = (AtkUnitBase*) addonPtr;
-        if (!addon->IsVisible) {
+        var addon = addonPtr;
+        if (!addon.IsVisible) {
             return;
         }
 
-        // get examine window info
-        var rootNode = addon->RootNode;
-        if (rootNode == null) {
-            return;
-        }
-
-        var width = rootNode->Width * addon->Scale;
-        var height = rootNode->Height * addon->Scale;
-        var x = addon->X;
-        var y = addon->Y;
+        var width = addon.ScaledWidth;
+        var height = addon.ScaledHeight;
+        var x = addon.X;
+        var y = addon.Y;
 
         // check the last actor id recorded (should be who the examine window is showing)
         var actorId = this.Plugin.Repository.LastObjectId;
@@ -186,7 +180,7 @@ public class PluginUi : IDisposable {
                 continue;
             }
 
-            ImGui.TreePush();
+            ImGui.TreePush($"esi_{i}");
 
             if (IconButton(FontAwesomeIcon.ExternalLinkAlt, $"open-{i}")) {
                 Process.Start(new ProcessStartInfo {
